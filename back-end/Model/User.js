@@ -1,5 +1,7 @@
-import mongoose, { Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { Post } from '../Model/Post.js';
+
+console.log({ Post });
 
 const userSchema = new Schema(
     {
