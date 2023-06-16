@@ -10,26 +10,32 @@ mongoose.connect('mongodb://localhost:27017/blogging-platform');
 
 // --------------------------------------------------
 
+// Vor jedem Durchgang wird die Datenbank/Collection gelöscht
+await mongoose.connection.dropDatabase();
 
-// Extrahieren der Authroen aus dem blogPosts-Array
+// Extrahieren der Authoren aus dem blogPosts-Array
 const authors = data.blogPosts.map((article) => article.author);
 console.log(authors);
 
-// Entfernen aller doppelten Authoren --> new Set Mothode !!!
+// Entfernen aller doppelten Authoren --> new Set Methode !!!
 const uniqueAuthors = [...new Set(authors)];
 console.log(uniqueAuthors);
 
 const userCreationPromiseArray = uniqueAuthors.map((author) => {
     const email = author.split(" ").join(".") + "@gmail.com";
+    // const password = email;
+    const user = new User({ name: author, email: email });
+    // user.setPassword(password.toLocaleLowerCase());
+
     return User.create({ name: author, email });
 });
 
-console.log({ userCreationPromiseArray });
+// console.log({ userCreationPromiseArray });
 
 await Promise.all(userCreationPromiseArray);
 
-
-
+// --------------------------------------------------------
+// Erstellen und speichern der blogPosts in der Datenbank
 for (let postData of data.blogPosts) {
 
     // neuer Post
@@ -47,5 +53,5 @@ for (let postData of data.blogPosts) {
     // console.log(savedAuthor);
 
     const user = await User.find().populate('posts');
-    console.log(JSON.stringify(user))
+    // console.log(JSON.stringify(user))
 }
