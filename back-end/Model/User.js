@@ -1,12 +1,10 @@
 import { Schema, model } from 'mongoose';
 import { Post } from '../Model/Post.js';
 
-console.log({ Post });
-
 const userSchema = new Schema(
     {
-        name: String,
-        email: String,
+        name: { type: String, required: true },
+        email: { type: String, required: true, unique: true, lowercase: true },
         posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }]
     }
 );
